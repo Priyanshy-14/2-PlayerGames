@@ -329,8 +329,110 @@ def ping_pong():
     game_loop()
     game.mainloop()
 
+
+
+
+
 def guess_the_number():
-    ...
+    def start_game(vs_computer):
+        select_window.destroy()  # Close mode window
+
+        game = tk.Tk()
+        game.title("Guess the Number")
+        game.geometry("400x300")
+        game.resizable(False, False)
+
+        secret_number = [0]
+        attempts = [0]
+
+        if vs_computer:
+            secret_number[0] = random.randint(1, 100)
+            instructions = "Guess a number between 1 and 100"
+        else:
+            # Ask Player 1 to set the number
+            def set_number():
+                try:
+                    num = int(entry.get())
+                    if not (1 <= num <= 100):
+                        raise ValueError
+                    secret_number[0] = num
+                    entry.delete(0, tk.END)
+                    label.config(text="Player 2, start guessing!")
+                    entry.config(show="")
+                    start_btn.config(text="Submit Guess", command=submit_guess)
+                except ValueError:
+                    messagebox.showerror("Error", "Enter a number between 1 and 100")
+            instructions = "Player 1, enter a number (1–100)"
+        label = tk.Label(game, text=instructions, font=("Arial", 14))
+        label.pack(pady=20)
+
+        entry = tk.Entry(game, font=("Arial", 14), width=10)
+        entry.pack()
+
+        result_label = tk.Label(game, text="", font=("Arial", 12))
+        result_label.pack(pady=10)
+
+        def submit_guess():
+            try:
+                guess = int(entry.get())
+                attempts[0] += 1
+                if guess < secret_number[0]:
+                    result_label.config(text="Too low!")
+                elif guess > secret_number[0]:
+                    result_label.config(text="Too high!")
+                else:
+                    messagebox.showinfo("Correct!", f"You guessed it in {attempts[0]} attempts!")
+                    reset_game()
+            except ValueError:
+                messagebox.showerror("Error", "Please enter a valid number.")
+            entry.delete(0, tk.END)
+
+        def reset_game():
+            attempts[0] = 0
+            result_label.config(text="")
+            entry.delete(0, tk.END)
+            if vs_computer:
+                secret_number[0] = random.randint(1, 100)
+                label.config(text="Guess a number between 1 and 100")
+            else:
+                label.config(text="Player 1, enter a number (1–100)")
+                entry.config(show="*")
+                start_btn.config(text="Set Number", command=set_number)
+
+        def exit_game():
+            game.destroy()
+
+        if vs_computer:
+            start_btn = tk.Button(game, text="Submit Guess", font=("Arial", 12), command=submit_guess)
+        else:
+            entry.config(show="*")
+            start_btn = tk.Button(game, text="Set Number", font=("Arial", 12), command=set_number)
+
+        start_btn.pack(pady=10)
+
+        bottom = tk.Frame(game)
+        bottom.pack(pady=20)
+
+        tk.Button(bottom, text="Reset", width=10, command=reset_game).grid(row=0, column=0, padx=10)
+        tk.Button(bottom, text="Exit", width=10, command=exit_game).grid(row=0, column=1, padx=10)
+
+        game.mainloop()
+
+    # Initial mode selection window
+    select_window = tk.Tk()
+    select_window.title("Choose Game Mode")
+    select_window.geometry("300x200")
+    select_window.resizable(False, False)
+
+    tk.Label(select_window, text="Guess The Number", font=("Arial", 16, "bold")).pack(pady=20)
+
+    tk.Button(select_window, text="Play with Computer", font=("Arial", 12), width=20,
+              command=lambda: start_game(True)).pack(pady=10)
+
+    tk.Button(select_window, text="Play with Friend", font=("Arial", 12), width=20,
+              command=lambda: start_game(False)).pack(pady=5)
+
+    select_window.mainloop()
 
 
 
