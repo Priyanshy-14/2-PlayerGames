@@ -5,12 +5,13 @@ from pyfiglet import Figlet
 def main():
     x = "2-Player Games"
     f = Figlet(font = "slant")
+    f1 = Figlet(font = "serifcap")
     print(f.renderText(x))
 
     while True:
-        print("--------------------")
+        print("================================")
         print("Select a Game of Your Choice")
-        print("--------------------")
+        print("================================")
         print("1. Tic Tac Toe")
         print("2. Rock Paper Scissors")
         print("3. Ping Pong")
@@ -28,7 +29,7 @@ def main():
         elif choice == "4":
             guess_the_number()
         elif choice == "5":
-            print(f.renderText("Thanks for playing")) 
+            cowsay.stegosaurus("Thanks for Playing!")
             break
         else: 
             print("Invalid Choice. Try Again!")
