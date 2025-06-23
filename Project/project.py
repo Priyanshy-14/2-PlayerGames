@@ -137,6 +137,10 @@ def tic_tac_toe():
 
     select_win.mainloop()
 
+
+
+
+
 def rock_paper_scissors():
     def launch_game(vs_computer):
         mode_win.destroy()  # close mode window
@@ -220,8 +224,110 @@ def rock_paper_scissors():
 
     mode_win.mainloop()
 
+
+
+
+
 def ping_pong():
-    ...
+    game = tk.Tk()
+    game.title("Pong - 2 Player")
+    game.resizable(False, False)
+    game.geometry("700x500")
+
+    canvas = tk.Canvas(game, bg="black", width=700, height=450)
+    canvas.pack()
+
+    # Create paddles and ball
+    paddle_a = canvas.create_rectangle(20, 150, 40, 250, fill="white")
+    paddle_b = canvas.create_rectangle(660, 150, 680, 250, fill="white")
+    ball = canvas.create_oval(340, 210, 360, 230, fill="white")
+
+    score_a = 0
+    score_b = 0
+    dx, dy = 4, 4  # Ball direction and speed
+
+    score_text = canvas.create_text(350, 30, fill="white", font=("Arial", 20),
+                                    text="Player A: 0    Player B: 0")
+
+    def update_score():
+        canvas.itemconfig(score_text, text=f"Player A: {score_a}    Player B: {score_b}")
+
+    def move_paddle_a_up(event):
+        canvas.move(paddle_a, 0, -20)
+
+    def move_paddle_a_down(event):
+        canvas.move(paddle_a, 0, 20)
+
+    def move_paddle_b_up(event):
+        canvas.move(paddle_b, 0, -20)
+
+    def move_paddle_b_down(event):
+        canvas.move(paddle_b, 0, 20)
+
+    def reset_game():
+        nonlocal score_a, score_b, dx, dy
+        score_a = 0
+        score_b = 0
+        update_score()
+        canvas.coords(ball, 340, 210, 360, 230)
+        dx, dy = 4, 4
+
+    def exit_game():
+        game.destroy()
+
+    def game_loop():
+        nonlocal dx, dy, score_a, score_b
+
+        canvas.move(ball, dx, dy)
+        ball_coords = canvas.coords(ball)
+        paddle_a_coords = canvas.coords(paddle_a)
+        paddle_b_coords = canvas.coords(paddle_b)
+
+        # Bounce on top/bottom
+        if ball_coords[1] <= 0 or ball_coords[3] >= 450:
+            dy = -dy
+
+        # Bounce on paddles
+        if (ball_coords[0] <= paddle_a_coords[2] and
+            paddle_a_coords[1] < ball_coords[3] and
+            paddle_a_coords[3] > ball_coords[1]):
+            dx = abs(dx)
+
+        if (ball_coords[2] >= paddle_b_coords[0] and
+            paddle_b_coords[1] < ball_coords[3] and
+            paddle_b_coords[3] > ball_coords[1]):
+            dx = -abs(dx)
+
+        # Score update
+        if ball_coords[0] <= 0:
+            score_b += 1
+            update_score()
+            canvas.coords(ball, 340, 210, 360, 230)
+            dx = abs(dx)
+
+        elif ball_coords[2] >= 700:
+            score_a += 1
+            update_score()
+            canvas.coords(ball, 340, 210, 360, 230)
+            dx = -abs(dx)
+
+        game.after(30, game_loop)
+
+    # Key bindings
+    game.bind("w", move_paddle_a_up)
+    game.bind("s", move_paddle_a_down)
+    game.bind("<Up>", move_paddle_b_up)
+    game.bind("<Down>", move_paddle_b_down)
+
+    # Buttons
+    control_frame = tk.Frame(game, bg="black")
+    control_frame.pack(pady=5)
+
+    tk.Button(control_frame, text="Reset", width=10, command=reset_game).grid(row=0, column=0, padx=10)
+    tk.Button(control_frame, text="Exit", width=10, command=exit_game).grid(row=0, column=1, padx=10)
+
+    game_loop()
+    game.mainloop()
 
 def guess_the_number():
     ...
