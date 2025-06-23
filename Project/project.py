@@ -138,7 +138,87 @@ def tic_tac_toe():
     select_win.mainloop()
 
 def rock_paper_scissors():
-    ...
+    def launch_game(vs_computer):
+        mode_win.destroy()  # close mode window
+
+        game = tk.Tk()
+        game.title("Rock Paper Scissors")
+        game.geometry("400x300")
+        game.resizable(False, False)
+
+        player_turn = [1]  # 1 or 2 for player switch
+        player1_choice = [""]
+        player2_choice = [""]
+
+        def decide_winner(p1, p2):
+            if p1 == p2:
+                return "Draw"
+            elif (p1 == "Rock" and p2 == "Scissors") or \
+                 (p1 == "Paper" and p2 == "Rock") or \
+                 (p1 == "Scissors" and p2 == "Paper"):
+                return "Player 1 wins!"
+            else:
+                return "Player 2 wins!" if not vs_computer else "Computer wins!"
+
+        def handle_choice(choice):
+            if vs_computer:
+                comp_choice = random.choice(["Rock", "Paper", "Scissors"])
+                result = decide_winner(choice, comp_choice)
+                messagebox.showinfo("Result", f"You chose {choice}\nComputer chose {comp_choice}\n\n{result}")
+                reset_game()
+            else:
+                if player_turn[0] == 1:
+                    player1_choice[0] = choice
+                    label.config(text="Player 2, make your choice")
+                    player_turn[0] = 2
+                else:
+                    player2_choice[0] = choice
+                    result = decide_winner(player1_choice[0], player2_choice[0])
+                    messagebox.showinfo("Result", f"Player 1 chose {player1_choice[0]}\nPlayer 2 chose {player2_choice[0]}\n\n{result}")
+                    reset_game()
+
+        def reset_game():
+            player_turn[0] = 1
+            player1_choice[0] = ""
+            player2_choice[0] = ""
+            label.config(text="Make your choice:")
+
+        def exit_game():
+            game.destroy()
+
+        label = tk.Label(game, text="Make your choice:", font=("Arial", 16))
+        label.pack(pady=20)
+
+        btn_frame = tk.Frame(game)
+        btn_frame.pack()
+
+        for i, option in enumerate(["Rock", "Paper", "Scissors"]):
+            tk.Button(btn_frame, text=option, font=("Arial", 14),
+                      width=10, command=lambda opt=option: handle_choice(opt)).grid(row=0, column=i, padx=5)
+
+        bottom_frame = tk.Frame(game)
+        bottom_frame.pack(pady=20)
+
+        tk.Button(bottom_frame, text="Reset", width=10, command=reset_game).grid(row=0, column=0, padx=10)
+        tk.Button(bottom_frame, text="Exit", width=10, command=exit_game).grid(row=0, column=1, padx=10)
+
+        game.mainloop()
+
+    # Mode Selection Window
+    mode_win = tk.Tk()
+    mode_win.title("Choose Game Mode")
+    mode_win.geometry("300x200")
+    mode_win.resizable(False, False)
+
+    tk.Label(mode_win, text="Play Rock Paper Scissors", font=("Arial", 14, "bold")).pack(pady=20)
+
+    tk.Button(mode_win, text="Play with Friend", font=("Arial", 12), width=20,
+              command=lambda: launch_game(False)).pack(pady=10)
+
+    tk.Button(mode_win, text="Play with Computer", font=("Arial", 12), width=20,
+              command=lambda: launch_game(True)).pack(pady=5)
+
+    mode_win.mainloop()
 
 def ping_pong():
     ...
