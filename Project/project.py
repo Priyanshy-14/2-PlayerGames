@@ -32,10 +32,12 @@ def main():
         elif choice == "4":
             guess_the_number()
         elif choice == "5":
-            cowsay.stegosaurus("Thanks for Playing!")
+            print(f1.renderText("Thanks for Playing!"))
+            cowsay.stegosaurus("GOOD BYEEE!!!")
             break
         else: 
             print("Invalid Choice. Try Again!")
+            
 
 
 
