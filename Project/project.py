@@ -30,6 +30,13 @@ def decide_winner(p1, p2, vs_computer=False):
 def format_score(score_a: int, score_b: int) -> str:
     return f"Player A: {score_a}    Player B: {score_b}"
 
+def evaluate_guess(secret: int, guess: int) -> str:
+    if guess < secret:
+        return "Too low!"
+    elif guess > secret:
+        return "Too high!"
+    else:
+        return "Correct!"
 
 
 def main():
@@ -345,8 +352,7 @@ def ping_pong():
 
 def guess_the_number():
     def start_game(vs_computer):
-        select_window.destroy()  # Close mode window
-
+        select_window.destroy()  
         game = tk.Tk()
         game.title("Guess the Number")
         game.geometry("400x300")
@@ -359,7 +365,6 @@ def guess_the_number():
             secret_number[0] = random.randint(1, 100)
             instructions = "Guess a number between 1 and 100"
         else:
-            # Ask Player 1 to set the number
             def set_number():
                 try:
                     num = int(entry.get())

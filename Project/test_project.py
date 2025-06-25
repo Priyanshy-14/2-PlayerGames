@@ -2,6 +2,7 @@ import pytest
 from project import check_winner
 from project import decide_winner
 from project import format_score
+from project import evaluate_guess
 
 
 #-------------------TIC_TAC_TOE-------------------------
@@ -57,10 +58,17 @@ def test_vs_computer():
     assert decide_winner("Scissors", "Paper", vs_computer=True) == "Player 1 wins!"
 
 
-#-------------------PING PONG-------------------------
+#-------------------PING PONG-------------------------------
 
 def test_format_score():
     assert format_score(0, 0) == "Player A: 0    Player B: 0"
     assert format_score(5, 2) == "Player A: 5    Player B: 2"
     assert format_score(10, 10) == "Player A: 10    Player B: 10"
+
+#-------------------GUESS THE NUMBER-------------------------
+
+def test_evaluate_guess():
+    assert evaluate_guess(50, 25) == "Too low!"
+    assert evaluate_guess(50, 75) == "Too high!"
+    assert evaluate_guess(50, 50) == "Correct!"
 
