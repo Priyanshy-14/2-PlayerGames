@@ -388,19 +388,15 @@ def guess_the_number():
         result_label.pack(pady=10)
 
         def submit_guess():
-            try:
-                guess = int(entry.get())
-                attempts[0] += 1
-                if guess < secret_number[0]:
-                    result_label.config(text="Too low!")
-                elif guess > secret_number[0]:
-                    result_label.config(text="Too high!")
-                else:
-                    messagebox.showinfo("Correct!", f"You guessed it in {attempts[0]} attempts!")
-                    reset_game()
-            except ValueError:
-                messagebox.showerror("Error", "Please enter a valid number.")
-            entry.delete(0, tk.END)
+            guess = int(entry.get())
+            attempts[0] += 1
+            result = evaluate_guess(secret_number[0], guess)
+            if result == "Correct!":
+                messagebox.showinfo("Correct!", f"You guessed it in {attempts[0]} attempts!")
+                reset_game()
+            else:
+                result_label.config(text=result)
+                entry.delete(0, tk.END)
 
         def reset_game():
             attempts[0] = 0
