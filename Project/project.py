@@ -142,7 +142,6 @@ def tic_tac_toe():
 
 
 
-
 def rock_paper_scissors():
     def launch_game(vs_computer):
         mode_win.destroy()  # close mode window
