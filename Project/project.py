@@ -3,7 +3,29 @@ from pyfiglet import Figlet
 import tkinter as tk
 from tkinter import messagebox
 import random
-#from tabulate import tabulate
+
+
+def check_winner(board):
+    wins = [(0,1,2), (3,4,5), (6,7,8),
+            (0,3,6), (1,4,7), (2,5,8),
+            (0,4,8), (2,4,6)]
+    for i, j, k in wins:
+        if board[i] == board[j] == board[k] and board[i] != "":
+            return board[i]
+    if "" not in board:
+        return "Draw"
+    return None
+
+def decide_winner(p1, p2, vs_computer=False):
+    if p1 == p2:
+        return "Draw"
+    elif (p1 == "Rock" and p2 == "Scissors") or \
+         (p1 == "Paper" and p2 == "Rock") or \
+         (p1 == "Scissors" and p2 == "Paper"):
+        return "Player 1 wins!"
+    else:
+        return "Computer wins!" if vs_computer else "Player 2 wins!"
+
 
 def main():
     x = "2-Player Games"
@@ -53,19 +75,10 @@ def tic_tac_toe():
         game.resizable(False, False)
 
         current_player = ["X"]
+        global board
         board = [""] * 9
         buttons = []
 
-        def check_winner():
-            wins = [(0,1,2), (3,4,5), (6,7,8),
-                    (0,3,6), (1,4,7), (2,5,8),
-                    (0,4,8), (2,4,6)]
-            for i, j, k in wins:
-                if board[i] == board[j] == board[k] and board[i] != "":
-                    return board[i]
-            if "" not in board:
-                return "Draw"
-            return None
 
         def computer_move():
             empty_indices = [i for i, v in enumerate(board) if v == ""]
@@ -73,7 +86,7 @@ def tic_tac_toe():
                 move = random.choice(empty_indices)
                 board[move] = "O"
                 buttons[move].config(text="O", state="disabled")
-                winner = check_winner()
+                winner = check_winner(board)
                 if winner:
                     show_result(winner)
 
@@ -155,20 +168,11 @@ def rock_paper_scissors():
         player1_choice = [""]
         player2_choice = [""]
 
-        def decide_winner(p1, p2):
-            if p1 == p2:
-                return "Draw"
-            elif (p1 == "Rock" and p2 == "Scissors") or \
-                 (p1 == "Paper" and p2 == "Rock") or \
-                 (p1 == "Scissors" and p2 == "Paper"):
-                return "Player 1 wins!"
-            else:
-                return "Player 2 wins!" if not vs_computer else "Computer wins!"
 
         def handle_choice(choice):
             if vs_computer:
                 comp_choice = random.choice(["Rock", "Paper", "Scissors"])
-                result = decide_winner(choice, comp_choice)
+                result = decide_winner(choice, comp_choice, vs_computer=True)  
                 messagebox.showinfo("Result", f"You chose {choice}\nComputer chose {comp_choice}\n\n{result}")
                 reset_game()
             else:
@@ -178,7 +182,7 @@ def rock_paper_scissors():
                     player_turn[0] = 2
                 else:
                     player2_choice[0] = choice
-                    result = decide_winner(player1_choice[0], player2_choice[0])
+                    result = decide_winner(player1_choice[0], player2_choice[0]) 
                     messagebox.showinfo("Result", f"Player 1 chose {player1_choice[0]}\nPlayer 2 chose {player2_choice[0]}\n\n{result}")
                     reset_game()
 
@@ -238,7 +242,7 @@ def ping_pong():
     canvas = tk.Canvas(game, bg="black", width=700, height=450)
     canvas.pack()
 
-    # Create paddles and ball
+    # Created paddles and ball
     paddle_a = canvas.create_rectangle(20, 150, 40, 250, fill="white")
     paddle_b = canvas.create_rectangle(660, 150, 680, 250, fill="white")
     ball = canvas.create_oval(340, 210, 360, 230, fill="white")
