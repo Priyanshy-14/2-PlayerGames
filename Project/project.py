@@ -25,6 +25,11 @@ def decide_winner(p1, p2, vs_computer=False):
         return "Player 1 wins!"
     else:
         return "Computer wins!" if vs_computer else "Player 2 wins!"
+    
+
+def format_score(score_a: int, score_b: int) -> str:
+    return f"Player A: {score_a}    Player B: {score_b}"
+
 
 
 def main():

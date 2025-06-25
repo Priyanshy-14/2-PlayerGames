@@ -1,7 +1,10 @@
 import pytest
 from project import check_winner
 from project import decide_winner
+from project import format_score
 
+
+#-------------------TIC_TAC_TOE-------------------------
 def test_x_wins_row():
     board = ["X", "X", "X",
              "", "", "",
@@ -33,7 +36,7 @@ def test_incomplete_game():
     assert check_winner(board) == None
 
 
-
+#-------------------ROCK_PAPER_SCISSORS-------------------------
 def test_draw():
     assert decide_winner("Rock", "Rock") == "Draw"
     assert decide_winner("Paper", "Paper") == "Draw"
@@ -52,3 +55,12 @@ def test_player2_wins():
 def test_vs_computer():
     assert decide_winner("Rock", "Paper", vs_computer=True) == "Computer wins!"
     assert decide_winner("Scissors", "Paper", vs_computer=True) == "Player 1 wins!"
+
+
+#-------------------PING PONG-------------------------
+
+def test_format_score():
+    assert format_score(0, 0) == "Player A: 0    Player B: 0"
+    assert format_score(5, 2) == "Player A: 5    Player B: 2"
+    assert format_score(10, 10) == "Player A: 10    Player B: 10"
+
